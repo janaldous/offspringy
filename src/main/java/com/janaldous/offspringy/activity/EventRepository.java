@@ -1,8 +1,8 @@
-package com.janaldous.jugtours.activity;
+package com.janaldous.offspringy.activity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.janaldous.jugtours.model.Event;
+import com.janaldous.offspringy.model.Event;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 

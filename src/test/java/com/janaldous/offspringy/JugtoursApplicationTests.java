@@ -1,4 +1,4 @@
-package com.janaldous.jugtours;
+package com.janaldous.offspringy;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

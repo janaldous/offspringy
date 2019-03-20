@@ -1,4 +1,4 @@
-package com.janaldous.jugtours;
+package com.janaldous.offspringy;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.janaldous.jugtours.activity.ActivityRepository;
-import com.janaldous.jugtours.group.GroupRepository;
-import com.janaldous.jugtours.model.Activity;
-import com.janaldous.jugtours.model.Event;
-import com.janaldous.jugtours.model.Group;
+import com.janaldous.offspringy.activity.ActivityRepository;
+import com.janaldous.offspringy.group.GroupRepository;
+import com.janaldous.offspringy.model.Activity;
+import com.janaldous.offspringy.model.Event;
+import com.janaldous.offspringy.model.Group;
 
 @Component
 class Initializer implements CommandLineRunner {

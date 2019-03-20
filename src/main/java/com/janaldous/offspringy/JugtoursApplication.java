@@ -1,4 +1,4 @@
-package com.janaldous.jugtours;
+package com.janaldous.offspringy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

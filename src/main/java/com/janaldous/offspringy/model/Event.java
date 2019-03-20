@@ -1,4 +1,4 @@
-package com.janaldous.jugtours.model;
+package com.janaldous.offspringy.model;
 
 import java.time.Instant;
 import java.util.Set;

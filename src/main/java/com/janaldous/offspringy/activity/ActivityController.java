@@ -1,4 +1,4 @@
-package com.janaldous.jugtours.activity;
+package com.janaldous.offspringy.activity;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.janaldous.jugtours.model.Activity;
+import com.janaldous.offspringy.model.Activity;
+import com.janaldous.offspringy.model.ActivityType;
 
 @RestController
 @RequestMapping("/api")
@@ -36,7 +38,14 @@ public class ActivityController {
     
 	@ApiOperation(value = "View a list of available activities", response = Collection.class)
 	@GetMapping("/activity")
-    Collection<Activity> activities() {
+    Collection<Activity> activities(
+    		@RequestParam(required = false) String name, 
+    		@RequestParam(required = false) ActivityType type
+    		) {
+		if (name != null) {
+			activityRepository.findByName(name);
+		}
+		
         return activityRepository.findAll();
     }
 	

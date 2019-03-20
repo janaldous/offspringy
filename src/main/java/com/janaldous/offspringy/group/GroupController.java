@@ -1,4 +1,4 @@
-package com.janaldous.jugtours.group;
+package com.janaldous.offspringy.group;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.janaldous.jugtours.model.Group;
+import com.janaldous.offspringy.model.Group;
 
 @RestController
 @RequestMapping("/api")

@@ -1,4 +1,4 @@
-package com.janaldous.jugtours.config;
+package com.janaldous.offspringy.config;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 

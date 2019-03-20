@@ -1,4 +1,4 @@
-package com.janaldous.jugtours.activity;
+package com.janaldous.offspringy.activity;
 
 import io.swagger.annotations.Api;
 
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.janaldous.jugtours.model.Activity;
-import com.janaldous.jugtours.model.Event;
+import com.janaldous.offspringy.model.Activity;
+import com.janaldous.offspringy.model.Event;
 
 @RestController
 @RequestMapping("/api")
