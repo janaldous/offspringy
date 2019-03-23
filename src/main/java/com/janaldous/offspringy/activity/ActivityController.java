@@ -83,6 +83,10 @@ public class ActivityController {
 	@DeleteMapping("/activity/{id}")
     public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
 		log.info("Request to delete activity: {}", id);
+		if (!activityService.findById(id).isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+        
         activityService.deleteById(id);
         
         return ResponseEntity.ok().build();

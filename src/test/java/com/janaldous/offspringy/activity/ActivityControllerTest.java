@@ -3,6 +3,7 @@ package com.janaldous.offspringy.activity;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -126,4 +128,37 @@ public class ActivityControllerTest {
 				.andExpect(status().isBadRequest());
 	}
 	
+	@Test
+	public void givenActivity_whenDeleteActivity_thenReturn200()
+			throws Exception {
+		// given
+		Activity activity = Activity.builder()
+				.id(1L)
+				.name("name")
+				.summary("summary")
+				.type(ActivityType.BOOK_NOW)
+				.build();
+		Optional<Activity> activityResult = Optional.of(activity);
+		
+		given(service.findById(1L)).willReturn(activityResult);
+		
+		// when, then
+		mvc.perform(delete("/api/activity/1")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void givenNonExistentActivity_whenDeleteActivity_thenReturn404()
+			throws Exception {
+		// given
+		Optional<Activity> activityResult = Optional.empty();
+		
+		given(service.findById(1L)).willReturn(activityResult);
+		
+		// when, then
+		mvc.perform(delete("/api/activity/1")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+	}
 }
