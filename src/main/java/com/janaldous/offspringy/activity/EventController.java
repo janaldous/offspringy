@@ -23,9 +23,11 @@ import com.janaldous.offspringy.model.Event;
 
 @RestController
 @RequestMapping("/api")
-@Api(value="event", description="Operations pertaining to events")
+@Api(value="event")
 public class EventController {
+	
 	private final Logger log = LoggerFactory.getLogger(ActivityController.class);
+	
 	@Autowired
     private ActivityRepository activityRepository;
 	

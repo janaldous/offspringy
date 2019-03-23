@@ -37,7 +37,7 @@ public class ActivityServiceTest {
 	
 	@Test
     public void givenSearchName_whenSearchActivity_thenReturnActivities() {
-		
+		// given
 		Activity activity1 = Activity.builder()
 				.name("swimming")
 				.summary("summary 1")
@@ -60,8 +60,10 @@ public class ActivityServiceTest {
         
 		given(repository.findAll()).willReturn(allActivities);
 		
+		// when
 		List<Activity> results = activityService.search("act", null);
         
+		// then
 		assertEquals(2, results.size());
 		
         boolean found = results.stream()
@@ -73,7 +75,7 @@ public class ActivityServiceTest {
 
 	@Test
     public void givenSearchType_whenSearchActivity_thenReturnActivities() {
-		
+		// given
 		Activity activity1 = Activity.builder()
 				.name("swimming")
 				.summary("summary 1")
@@ -95,9 +97,12 @@ public class ActivityServiceTest {
         List<Activity> allActivities = Arrays.asList(activity1, activity2, activity3);
         
 		given(repository.findAll()).willReturn(allActivities);
-		
+
+		// when
 		List<Activity> results = activityService.search(null, ActivityType.MORE);
         
+		// then
+		
 		assertEquals(2, results.size());
 		
         boolean found = results.stream()
@@ -109,7 +114,7 @@ public class ActivityServiceTest {
 	
 	@Test
     public void givenSearchNameAndType_whenSearchActivity_thenReturnActivities() {
-		
+		// given
 		Activity activity1 = Activity.builder()
 				.name("swimming")
 				.summary("summary 1")
@@ -132,8 +137,10 @@ public class ActivityServiceTest {
         
 		given(repository.findAll()).willReturn(allActivities);
 		
+		// when
 		List<Activity> results = activityService.search("act", ActivityType.FREE);
         
+		// then
 		assertEquals(1, results.size());
 		
         boolean found = results.stream()
@@ -145,7 +152,7 @@ public class ActivityServiceTest {
 	
 	@Test
     public void givenSearchEmptyQuery_whenSearchActivity_thenReturnActivities() {
-		
+		// given
 		Activity activity1 = Activity.builder()
 				.name("swimming")
 				.summary("summary 1")
@@ -168,8 +175,10 @@ public class ActivityServiceTest {
         
 		given(repository.findAll()).willReturn(allActivities);
 		
+		// when
 		List<Activity> results = activityService.search(null, null);
         
+		// then
         assertEquals(allActivities, results);
         
     }

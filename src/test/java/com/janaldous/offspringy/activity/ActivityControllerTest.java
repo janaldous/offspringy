@@ -34,7 +34,7 @@ public class ActivityControllerTest {
 	@Test
 	public void givenActivities_whenGetActivities_thenReturnJsonArray()
 			throws Exception {
-
+		// given
 		Activity activity1 = Activity.builder().name("activity 1").summary("summary 1").build();
 
 		Activity activity2 = Activity.builder().name("activity 2").summary("summary 2").build();
@@ -42,32 +42,32 @@ public class ActivityControllerTest {
 		List<Activity> allActivities = Arrays.asList(activity1, activity2);
 
 		given(service.findAll()).willReturn(allActivities);
-
+		
+		// when, then
 		mvc.perform(get("/api/activity")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].name", is(activity1.getName())))
 				.andExpect(jsonPath("$[1].name", is(activity2.getName())));
-		
 	}
 	
 	@Test
 	public void givenActivityQuery_whenGetActivities_thenReturnJsonArray()
 			throws Exception {
-
+		// given
 		Activity activity1 = Activity.builder().name("acting class").summary("acting 1").build();
 
 		List<Activity> resetActivities = Arrays.asList(activity1);
 
 		given(service.search("act", null)).willReturn(resetActivities);
-
+		
+		// when, then
 		mvc.perform(get("/api/activity?name=act")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1)))
 				.andExpect(jsonPath("$[0].name", is(activity1.getName())));
-		
 	}
 	
 }

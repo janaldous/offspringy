@@ -30,7 +30,7 @@ import com.janaldous.offspringy.model.ActivityType;
 
 @RestController
 @RequestMapping("/api")
-@Api(value="activity", description="Operations pertaining to activity")
+@Api(value="activity")
 public class ActivityController {
 	
 	private final Logger log = LoggerFactory.getLogger(ActivityController.class);
@@ -55,6 +55,7 @@ public class ActivityController {
 	@GetMapping("/activity/{id}")
     ResponseEntity<?> getActivityDetail(@PathVariable Long id) {
         Optional<Activity> activity = activityService.findById(id);
+        
         return activity.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -62,8 +63,9 @@ public class ActivityController {
 	@ApiOperation(value = "Create an activity", response = ResponseEntity.class)
 	@PostMapping("/activity")
     ResponseEntity<Activity> createActivity(@Valid @RequestBody Activity activity) throws URISyntaxException {
-        log.info("Request to create activity: {}", activity);
+		log.info("Request to create activity: {}", activity);
         Activity result = activityService.save(activity);
+        
         return ResponseEntity.created(new URI("/api/activity/" + result.getId()))
                 .body(result);
     }
@@ -71,16 +73,18 @@ public class ActivityController {
 	@ApiOperation(value = "Update an activity", response = ResponseEntity.class)
 	@PutMapping("/activity")
     ResponseEntity<Activity> updateActivity(@Valid @RequestBody Activity activity) {
-        log.info("Request to update activity: {}", activity);
+		log.info("Request to update activity: {}", activity);
         Activity result = activityService.save(activity);
+        
         return ResponseEntity.ok().body(result);
     }
 	
 	@ApiOperation(value = "Delete an activity", response = ResponseEntity.class)
 	@DeleteMapping("/activity/{id}")
     public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
-        log.info("Request to delete activity: {}", id);
+		log.info("Request to delete activity: {}", id);
         activityService.deleteById(id);
+        
         return ResponseEntity.ok().build();
     }
 }
