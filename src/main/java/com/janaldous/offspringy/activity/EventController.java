@@ -32,11 +32,11 @@ public class EventController {
     private IActivityService activityService;
 	
 	@Autowired
-	private IEventService eventRepository;
+	private IEventService eventService;
     
 	@GetMapping("/activity/{activityId}/event/{eventId}")
     ResponseEntity<Event> getEvent(@PathVariable Long eventId) {
-        Optional<Event> event = eventRepository.findById(eventId);
+        Optional<Event> event = eventService.findById(eventId);
 		return event.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -48,7 +48,7 @@ public class EventController {
 		Optional<Activity> activity = activityService.findById(activityId);
 		if (!activity.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
-		Event result = eventRepository.save(event);
+		Event result = eventService.save(event);
         return ResponseEntity.ok().body(result);
     }
 	

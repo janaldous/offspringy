@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,7 @@ public class Activity {
 	@Id
     @GeneratedValue
     private Long id;
+	@NotBlank(message = "Name is mandatory")
 	@NonNull
 	private String name;
 	@ManyToOne

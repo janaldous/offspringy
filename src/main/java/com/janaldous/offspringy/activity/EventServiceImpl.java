@@ -5,9 +5,11 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.janaldous.offspringy.model.Event;
 
+@Service
 public class EventServiceImpl implements IEventService {
 
 	@Autowired
