@@ -32,9 +32,11 @@ import com.janaldous.offspringy.model.ActivityType;
 @RequestMapping("/api")
 @Api(value="activity", description="Operations pertaining to activity")
 public class ActivityController {
+	
 	private final Logger log = LoggerFactory.getLogger(ActivityController.class);
+	
 	@Autowired
-    private ActivityRepository activityRepository;
+    private IActivityService activityService;
     
 	@ApiOperation(value = "View a list of available activities", response = Collection.class)
 	@GetMapping("/activity")
@@ -42,17 +44,17 @@ public class ActivityController {
     		@RequestParam(required = false) String name, 
     		@RequestParam(required = false) ActivityType type
     		) {
-		if (name != null) {
-			activityRepository.findByName(name);
+		if (name != null || type != null) {
+			return activityService.search(name, type);
 		}
 		
-        return activityRepository.findAll();
+        return activityService.findAll();
     }
 	
 	@ApiOperation(value = "View details of an activity", response = ResponseEntity.class)
 	@GetMapping("/activity/{id}")
     ResponseEntity<?> getActivityDetail(@PathVariable Long id) {
-        Optional<Activity> activity = activityRepository.findById(id);
+        Optional<Activity> activity = activityService.findById(id);
         return activity.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -61,7 +63,7 @@ public class ActivityController {
 	@PostMapping("/activity")
     ResponseEntity<Activity> createActivity(@Valid @RequestBody Activity activity) throws URISyntaxException {
         log.info("Request to create activity: {}", activity);
-        Activity result = activityRepository.save(activity);
+        Activity result = activityService.save(activity);
         return ResponseEntity.created(new URI("/api/activity/" + result.getId()))
                 .body(result);
     }
@@ -70,7 +72,7 @@ public class ActivityController {
 	@PutMapping("/activity")
     ResponseEntity<Activity> updateActivity(@Valid @RequestBody Activity activity) {
         log.info("Request to update activity: {}", activity);
-        Activity result = activityRepository.save(activity);
+        Activity result = activityService.save(activity);
         return ResponseEntity.ok().body(result);
     }
 	
@@ -78,7 +80,7 @@ public class ActivityController {
 	@DeleteMapping("/activity/{id}")
     public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
         log.info("Request to delete activity: {}", id);
-        activityRepository.deleteById(id);
+        activityService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

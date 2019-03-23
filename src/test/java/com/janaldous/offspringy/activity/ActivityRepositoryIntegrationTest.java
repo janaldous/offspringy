@@ -3,7 +3,6 @@ package com.janaldous.offspringy.activity;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +23,6 @@ public class ActivityRepositoryIntegrationTest {
  
     @Autowired
     private ActivityRepository activityRepository;
-
     
     @Test
     public void whenFindByActivityName_thenReturnActivity() {
@@ -41,14 +39,10 @@ public class ActivityRepositoryIntegrationTest {
         List<Activity> results = activityRepository.findByName("activity 1");
      
         // then
-        boolean found = results.stream().noneMatch(new Predicate<Activity>() {
-			@Override
-			public boolean test(Activity activity) {
-				return activity.getName().contains("activity 1");
-			}
-        });
+        boolean found = results.stream()
+        		.allMatch(a -> a.getName().contains("activity 1"));
         
-        assertFalse(found);
+        assertTrue(found);
     }
     
     @Test
@@ -66,13 +60,9 @@ public class ActivityRepositoryIntegrationTest {
         List<Activity> results = activityRepository.findByType(ActivityType.BOOK_NOW);
      
         // then
-        boolean found = results.stream().noneMatch(new Predicate<Activity>() {
-			@Override
-			public boolean test(Activity activity) {
-				return activity.getType().equals(ActivityType.BOOK_NOW);
-			}
-        });
+        boolean found = results.stream()
+        		.allMatch(a -> a.getType().equals(ActivityType.BOOK_NOW));
         
-        assertFalse(found);
+        assertTrue(found);
     }
 }
