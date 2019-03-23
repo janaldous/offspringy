@@ -71,9 +71,13 @@ public class ActivityController {
     }
 	
 	@ApiOperation(value = "Update an activity", response = ResponseEntity.class)
-	@PutMapping("/activity")
-    ResponseEntity<Activity> updateActivity(@Valid @RequestBody Activity activity) {
+	@PutMapping("/activity/{id}")
+    ResponseEntity<Activity> updateActivity(@PathVariable Long id,
+    		@Valid @RequestBody Activity activity) {
 		log.info("Request to update activity: {}", activity);
+		if (!activityService.findById(id).isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
         Activity result = activityService.save(activity);
         
         return ResponseEntity.ok().body(result);
@@ -86,7 +90,6 @@ public class ActivityController {
 		if (!activityService.findById(id).isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-        
         activityService.deleteById(id);
         
         return ResponseEntity.ok().build();

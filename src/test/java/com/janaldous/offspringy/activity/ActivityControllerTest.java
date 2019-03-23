@@ -3,9 +3,7 @@ package com.janaldous.offspringy.activity;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.janaldous.offspringy.model.Activity;
 import com.janaldous.offspringy.model.ActivityType;
 
@@ -39,9 +38,15 @@ public class ActivityControllerTest {
 	public void givenActivities_whenGetActivities_thenReturnJsonArray()
 			throws Exception {
 		// given
-		Activity activity1 = Activity.builder().name("activity 1").summary("summary 1").build();
+		Activity activity1 = Activity.builder()
+				.name("activity 1")
+				.summary("summary 1")
+				.build();
 
-		Activity activity2 = Activity.builder().name("activity 2").summary("summary 2").build();
+		Activity activity2 = Activity.builder()
+				.name("activity 2")
+				.summary("summary 2")
+				.build();
 
 		List<Activity> allActivities = Arrays.asList(activity1, activity2);
 
@@ -60,7 +65,10 @@ public class ActivityControllerTest {
 	public void givenActivityQuery_whenGetActivities_thenReturnJsonArray()
 			throws Exception {
 		// given
-		Activity activity1 = Activity.builder().name("acting class").summary("acting 1").build();
+		Activity activity1 = Activity.builder()
+				.name("acting class")
+				.summary("acting 1")
+				.build();
 
 		List<Activity> resetActivities = Arrays.asList(activity1);
 
@@ -160,5 +168,54 @@ public class ActivityControllerTest {
 		mvc.perform(delete("/api/activity/1")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void givenActivity_whenUpdateActivity_thenReturn200()
+			throws Exception {
+		// given
+		Activity activity = Activity.builder()
+				.id(1L)
+				.name("name")
+				.summary("summary")
+				.type(ActivityType.BOOK_NOW)
+				.build();
+		Optional<Activity> activityResult = Optional.of(activity);
+		
+		given(service.findById(1L)).willReturn(activityResult);
+		
+		// when, then
+		mvc.perform(put("/api/activity/1")
+				.content(asJsonString(activity))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void givenNonExistentActivity_whenUpdateActivity_thenReturn404()
+			throws Exception {
+		// given
+		Activity activity = Activity.builder()
+				.id(101L)
+				.name("acting class")
+				.summary("acting 1")
+				.build();
+		Optional<Activity> activityResult = Optional.empty();
+		
+		given(service.findById(1L)).willReturn(activityResult);
+		
+		// when, then
+		mvc.perform(put("/api/activity/1")
+				.content(asJsonString(activity))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+	}
+	
+	public static String asJsonString(final Object obj) {
+	    try {
+	        return new ObjectMapper().writeValueAsString(obj);
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
 	}
 }
