@@ -29,10 +29,10 @@ public class EventController {
 	private final Logger log = LoggerFactory.getLogger(ActivityController.class);
 	
 	@Autowired
-    private ActivityRepository activityRepository;
+    private IActivityService activityService;
 	
 	@Autowired
-	private EventRepository eventRepository;
+	private IEventService eventRepository;
     
 	@GetMapping("/activity/{activityId}/event/{eventId}")
     ResponseEntity<Event> getEvent(@PathVariable Long eventId) {
@@ -45,7 +45,7 @@ public class EventController {
     ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event, @PathVariable Long activityId) {
 		log.info("Request to update event: {}", event);
 		
-		Optional<Activity> activity = activityRepository.findById(activityId);
+		Optional<Activity> activity = activityService.findById(activityId);
 		if (!activity.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
 		Event result = eventRepository.save(event);
@@ -55,9 +55,7 @@ public class EventController {
 	@PutMapping("/activity/{id}/event")
     ResponseEntity<Activity> addEventToActivity(@Valid @RequestBody Event event, @PathVariable Long id) {
         log.info("Request to add event: {}", event);
-        Activity result = activityRepository.findById(id).get();
-        result.getEvents().add(event);
-        activityRepository.save(result);
+        Activity result = activityService.addEvent(id, event);
         return ResponseEntity.ok().body(result);
     }
 }

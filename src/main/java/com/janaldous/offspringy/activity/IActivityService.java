@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.janaldous.offspringy.model.Activity;
 import com.janaldous.offspringy.model.ActivityType;
+import com.janaldous.offspringy.model.Event;
 
 public interface IActivityService {
 
@@ -21,5 +22,7 @@ public interface IActivityService {
 	void deleteById(Long id);
 
 	List<Activity> search(String name, ActivityType type);
+
+	Activity addEvent(Long id, @Valid Event event);
 
 }

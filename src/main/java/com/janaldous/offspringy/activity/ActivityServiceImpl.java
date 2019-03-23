@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.janaldous.offspringy.model.Activity;
 import com.janaldous.offspringy.model.ActivityType;
+import com.janaldous.offspringy.model.Event;
 
 @Service
 public class ActivityServiceImpl implements IActivityService {
@@ -50,6 +51,13 @@ public class ActivityServiceImpl implements IActivityService {
 				.filter(activity -> name == null || activity.getName().toUpperCase().contains(name.toUpperCase()))
 				.filter(activity -> type == null || activity.getType().equals(type))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Activity addEvent(Long id, @Valid Event event) {
+		Activity result = activityRepository.findById(id).get();
+        result.addEvent(event);
+        return activityRepository.save(result);
 	}
 	
 }
