@@ -48,7 +48,7 @@ public class EventController {
 		Optional<Activity> activity = activityService.findById(activityId);
 		if (!activity.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
-		Event result = eventService.save(event);
+		Event result = eventService.add(event);
         return ResponseEntity.ok().body(result);
     }
 	

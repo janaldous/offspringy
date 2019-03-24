@@ -10,6 +10,8 @@ public interface IEventService {
 
 	Optional<Event> findById(Long eventId);
 
-	Event save(@Valid Event event);
-
+	Event add(@Valid Event event);
+	
+	Event update(@Valid Event event);
+	
 }

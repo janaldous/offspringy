@@ -21,7 +21,21 @@ public class EventServiceImpl implements IEventService {
 	}
 
 	@Override
-	public Event save(@Valid Event event) {
+	public Event add(@Valid Event event) {
+		if (event.getId() != null) {
+			throw new IllegalArgumentException("Event already exists");
+		}
+		
+		return eventRepository.save(event);
+	}
+
+	@Override
+	public Event update(@Valid Event event) {
+		if (eventRepository.findById(event.getId()).isPresent()
+				&& event.getAttendees().size() > 0) {
+			throw new UpdateBookedEventException();
+		}
+		
 		return eventRepository.save(event);
 	}
 
