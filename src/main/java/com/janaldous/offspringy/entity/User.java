@@ -1,22 +1,25 @@
-package com.janaldous.offspringy.model;
+package com.janaldous.offspringy.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class Provider {
-	@Id
-	@GeneratedValue
-	private Long id;
-	private String name;
+public class User {
+
+    @Id
+    private String id;
+    private String firstName;
+    private String lastName;
+    @NonNull
+    private String email;
 }

@@ -9,9 +9,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.janaldous.offspringy.model.Activity;
-import com.janaldous.offspringy.model.ActivityType;
-import com.janaldous.offspringy.model.Event;
+import com.janaldous.offspringy.entity.Activity;
+import com.janaldous.offspringy.entity.ActivityType;
+import com.janaldous.offspringy.entity.Event;
 
 @Service
 public class ActivityServiceImpl implements IActivityService {

@@ -14,8 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.janaldous.offspringy.model.Event;
-import com.janaldous.offspringy.model.User;
+import com.janaldous.offspringy.entity.Event;
+import com.janaldous.offspringy.entity.User;
 
 @RunWith(SpringRunner.class)
 public class EventServiceTest {
@@ -39,8 +39,8 @@ public class EventServiceTest {
     public void givenBookedEvent_whenUpdateEvent_thenThrowError() {
 		// given
 		Set<User> attendees = new HashSet<>();
-		attendees.add(User.builder().name("jat").build());
-		attendees.add(User.builder().name("therese").build());
+		attendees.add(User.builder().firstName("dog").email("dog@gmail.com").build());
+		attendees.add(User.builder().firstName("cat").email("cat@gmail.com").build());
 		
         Event event = Event.builder()
         		.id(1L)

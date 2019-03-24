@@ -1,4 +1,4 @@
-package com.janaldous.offspringy.model;
+package com.janaldous.offspringy.entity;
 
 
 import java.util.HashSet;

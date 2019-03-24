@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.janaldous.offspringy.model.Activity;
-import com.janaldous.offspringy.model.Event;
+import com.janaldous.offspringy.entity.Activity;
+import com.janaldous.offspringy.entity.Event;
 
 @RestController
 @RequestMapping("/api")

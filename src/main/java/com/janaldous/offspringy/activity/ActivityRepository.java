@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.janaldous.offspringy.model.Activity;
-import com.janaldous.offspringy.model.ActivityType;
+import com.janaldous.offspringy.entity.Activity;
+import com.janaldous.offspringy.entity.ActivityType;
 
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
 

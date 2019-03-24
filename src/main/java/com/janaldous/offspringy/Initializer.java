@@ -9,10 +9,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.janaldous.offspringy.activity.ActivityRepository;
+import com.janaldous.offspringy.entity.Activity;
+import com.janaldous.offspringy.entity.Event;
+import com.janaldous.offspringy.entity.Group;
 import com.janaldous.offspringy.group.GroupRepository;
-import com.janaldous.offspringy.model.Activity;
-import com.janaldous.offspringy.model.Event;
-import com.janaldous.offspringy.model.Group;
 
 @Component
 class Initializer implements CommandLineRunner {

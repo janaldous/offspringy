@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.janaldous.offspringy.model.Event;
+import com.janaldous.offspringy.entity.Event;
 
 public interface IEventService {
 

@@ -21,8 +21,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.janaldous.offspringy.model.Activity;
-import com.janaldous.offspringy.model.ActivityType;
+import com.janaldous.offspringy.entity.Activity;
+import com.janaldous.offspringy.entity.ActivityType;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ActivityController.class)
