@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.janaldous.offspringy.activity.dto.ActivityDto;
 import com.janaldous.offspringy.entity.Activity;
 import com.janaldous.offspringy.entity.ActivityType;
 
@@ -62,7 +63,7 @@ public class ActivityController {
 	
 	@ApiOperation(value = "Create an activity", response = ResponseEntity.class)
 	@PostMapping("/activity")
-    ResponseEntity<Activity> createActivity(@Valid @RequestBody Activity activity) throws URISyntaxException {
+    ResponseEntity<Activity> createActivity(@Valid @RequestBody ActivityDto activity) throws URISyntaxException {
 		log.info("Request to create activity: {}", activity);
         Activity result = activityService.save(activity);
         
@@ -73,9 +74,9 @@ public class ActivityController {
 	@ApiOperation(value = "Update an activity", response = ResponseEntity.class)
 	@PutMapping("/activity/{id}")
     ResponseEntity<Activity> updateActivity(@PathVariable Long id,
-    		@Valid @RequestBody Activity activity) {
+    		@Valid @RequestBody ActivityDto activity) {
 		log.info("Request to update activity: {}", activity);
-		if (!activityService.findById(id).isPresent()) {
+		if (!activityService.hasActivity(id)) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
         Activity result = activityService.save(activity);
@@ -87,7 +88,7 @@ public class ActivityController {
 	@DeleteMapping("/activity/{id}")
     public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
 		log.info("Request to delete activity: {}", id);
-		if (!activityService.findById(id).isPresent()) {
+		if (!activityService.hasActivity(id)) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
         activityService.deleteById(id);

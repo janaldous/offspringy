@@ -2,16 +2,14 @@ package com.janaldous.offspringy.activity;
 
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import com.janaldous.offspringy.entity.Event;
 
 public interface IEventService {
 
-	Optional<Event> findById(Long eventId);
+	Optional<Event> getEvent(Long eventId);
 
-	Event add(@Valid Event event);
+	Event add(Event event);
 	
-	Event update(@Valid Event event);
+	Event update(Event event);
 	
 }

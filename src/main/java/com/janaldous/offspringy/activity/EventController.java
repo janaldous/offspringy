@@ -36,7 +36,7 @@ public class EventController {
     
 	@GetMapping("/activity/{activityId}/event/{eventId}")
     ResponseEntity<Event> getEvent(@PathVariable Long eventId) {
-        Optional<Event> event = eventService.findById(eventId);
+        Optional<Event> event = eventService.getEvent(eventId);
 		return event.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -45,8 +45,8 @@ public class EventController {
     ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event, @PathVariable Long activityId) {
 		log.info("Request to update event: {}", event);
 		
-		Optional<Activity> activity = activityService.findById(activityId);
-		if (!activity.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		if (!activityService.findById(activityId).isPresent())
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
 		Event result = eventService.add(event);
         return ResponseEntity.ok().body(result);

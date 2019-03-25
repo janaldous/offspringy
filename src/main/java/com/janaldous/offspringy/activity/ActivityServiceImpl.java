@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.janaldous.offspringy.activity.dto.ActivityDto;
 import com.janaldous.offspringy.entity.Activity;
 import com.janaldous.offspringy.entity.ActivityType;
 import com.janaldous.offspringy.entity.Event;
@@ -35,8 +36,13 @@ public class ActivityServiceImpl implements IActivityService {
 	}
 
 	@Override
-	public Activity save(@Valid Activity activity) {
-		return activityRepository.save(activity);
+	public Activity save(ActivityDto activity) {
+		Activity a = Activity.builder()
+				.id(activity.getId())
+				.name(activity.getName())
+				.build();
+				
+		return activityRepository.save(a);
 	}
 
 	@Override
@@ -59,5 +65,9 @@ public class ActivityServiceImpl implements IActivityService {
         result.addEvent(event);
         return activityRepository.save(result);
 	}
-	
+
+	@Override
+	public boolean hasActivity(Long id) {
+		return activityRepository.findById(id).isPresent();
+	}
 }

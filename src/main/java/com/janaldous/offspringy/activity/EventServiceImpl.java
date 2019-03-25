@@ -16,7 +16,7 @@ public class EventServiceImpl implements IEventService {
 	private EventRepository eventRepository;
 	
 	@Override
-	public Optional<Event> findById(Long eventId) {
+	public Optional<Event> getEvent(Long eventId) {
 		return eventRepository.findById(eventId);
 	}
 
