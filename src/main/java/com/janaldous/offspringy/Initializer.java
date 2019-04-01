@@ -1,7 +1,7 @@
 package com.janaldous.offspringy;
 
-import java.time.Instant;
 import java.util.Collections;
+import java.util.Date;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ class Initializer implements CommandLineRunner {
         Group djug = repository.findByName("Denver JUG");
         Event e = Event.builder().title("Full Stack Reactive")
                 .description("Reactive with Spring Boot + React")
-                .date(Instant.parse("2018-12-12T18:00:00.000Z"))
+                .date(new Date())
                 .build();
         djug.setEvents(Collections.singleton(e));
         repository.save(djug);

@@ -7,9 +7,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,24 +40,26 @@ public class ActivityController {
 	
 	@Autowired
     private IActivityService activityService;
+	
+	@Autowired
+	private ModelMapper modelMapper;
     
 	@ApiOperation(value = "View a list of available activities", response = Collection.class)
 	@GetMapping("/activity")
-    Collection<Activity> activities(
+    Collection<ActivityDto> activities(
     		@RequestParam(required = false) String name, 
     		@RequestParam(required = false) ActivityType type
     		) {
-		if (name != null || type != null) {
-			return activityService.search(name, type);
-		}
-		
-        return activityService.findAll();
+        return activityService.search(name, type)
+				.stream()
+				.map(this::convertToDto)
+				.collect(Collectors.toList());
     }
 	
 	@ApiOperation(value = "View details of an activity", response = ResponseEntity.class)
 	@GetMapping("/activity/{id}")
     ResponseEntity<?> getActivityDetail(@PathVariable Long id) {
-        Optional<Activity> activity = activityService.findById(id);
+        Optional<Activity> activity = activityService.findActivity(id);
         
         return activity.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -63,9 +67,9 @@ public class ActivityController {
 	
 	@ApiOperation(value = "Create an activity", response = ResponseEntity.class)
 	@PostMapping("/activity")
-    ResponseEntity<Activity> createActivity(@Valid @RequestBody ActivityDto activity) throws URISyntaxException {
+    ResponseEntity<ActivityDto> createActivity(@Valid @RequestBody ActivityDto activity) throws URISyntaxException {
 		log.info("Request to create activity: {}", activity);
-        Activity result = activityService.save(activity);
+        ActivityDto result = convertToDto(activityService.save(convertToEntity(activity)));
         
         return ResponseEntity.created(new URI("/api/activity/" + result.getId()))
                 .body(result);
@@ -73,15 +77,22 @@ public class ActivityController {
 	
 	@ApiOperation(value = "Update an activity", response = ResponseEntity.class)
 	@PutMapping("/activity/{id}")
-    ResponseEntity<Activity> updateActivity(@PathVariable Long id,
+    ResponseEntity<ActivityDto> updateActivity(@PathVariable Long id,
     		@Valid @RequestBody ActivityDto activity) {
 		log.info("Request to update activity: {}", activity);
-		if (!activityService.hasActivity(id)) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-        Activity result = activityService.save(activity);
-        
-        return ResponseEntity.ok().body(result);
+		return activityService.findActivity(id).map(a -> {
+			a.setName(activity.getName());
+			a.setProvider(activity.getProvider());
+			a.setSummary(activity.getSummary());
+			a.setType(activity.getType());
+			ActivityDto result = convertToDto(activityService.save(convertToEntity(activity)));
+			return ResponseEntity.ok().body(result);
+		})
+		.orElseGet(() -> {
+			activity.setId(id);
+			ActivityDto result = convertToDto(activityService.save(convertToEntity(activity)));
+			return ResponseEntity.ok().body(result);
+		});
     }
 	
 	@ApiOperation(value = "Delete an activity", response = ResponseEntity.class)
@@ -95,4 +106,14 @@ public class ActivityController {
         
         return ResponseEntity.ok().build();
     }
+	
+	private ActivityDto convertToDto(Activity activity) {
+		ActivityDto activityDto = modelMapper.map(activity, ActivityDto.class);
+	    return activityDto;
+	}
+	
+	private Activity convertToEntity(ActivityDto activityDto) {
+		Activity activity = modelMapper.map(activityDto, Activity.class);
+	    return activity;
+	}
 }

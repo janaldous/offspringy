@@ -3,7 +3,6 @@ package com.janaldous.offspringy.activity;
 import java.util.List;
 import java.util.Optional;
 
-import com.janaldous.offspringy.activity.dto.ActivityDto;
 import com.janaldous.offspringy.entity.Activity;
 import com.janaldous.offspringy.entity.ActivityType;
 import com.janaldous.offspringy.entity.Event;
@@ -14,9 +13,9 @@ public interface IActivityService {
 
 	List<Activity> findAll();
 
-	Optional<Activity> findById(Long id);
+	Optional<Activity> findActivity(Long id);
 
-	Activity save(ActivityDto activity);
+	Activity save(Activity activity);
 
 	void deleteById(Long id);
 
@@ -25,5 +24,7 @@ public interface IActivityService {
 	Activity addEvent(Long id, Event event);
 
 	boolean hasActivity(Long id);
+
+	Activity update(Long id, Activity convertToEntity);
 
 }

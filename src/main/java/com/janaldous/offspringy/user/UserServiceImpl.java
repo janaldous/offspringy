@@ -1,10 +1,12 @@
 package com.janaldous.offspringy.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.janaldous.offspringy.entity.User;
 import com.janaldous.offspringy.user.dto.UserDto;
 
+@Service
 public class UserServiceImpl implements IUserService {
 
 	@Autowired

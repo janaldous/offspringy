@@ -12,9 +12,12 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,28 +33,16 @@ public class EventControllerTest {
 
 	@MockBean
 	private IActivityService service;
-
-	@Test
-	public void givenActivities_whenGetActivities_thenReturnJsonArray()
-			throws Exception {
-		// given
-		Activity activity1 = Activity.builder().name("activity 1").summary("summary 1").build();
-
-		Activity activity2 = Activity.builder().name("activity 2").summary("summary 2").build();
-
-		List<Activity> allActivities = Arrays.asList(activity1, activity2);
-
-		given(service.findAll()).willReturn(allActivities);
-		
-		// when, then
-		mvc.perform(get("/api/activity")
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].name", is(activity1.getName())))
-				.andExpect(jsonPath("$[1].name", is(activity2.getName())));
-	}
 	
+	@TestConfiguration
+    static class ControllerContextConfiguration {
+  
+        @Bean
+        public ModelMapper modelMapper() {
+            return new ModelMapper();
+        }
+    }
+
 	@Test
 	public void givenActivityQuery_whenGetActivities_thenReturnJsonArray()
 			throws Exception {

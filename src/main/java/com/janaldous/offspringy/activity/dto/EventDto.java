@@ -1,34 +1,32 @@
-package com.janaldous.offspringy.entity;
+package com.janaldous.offspringy.activity.dto;
 
 import java.util.Date;
-import java.util.Set;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-public class Event {
+public class EventDto {
 
     @Id
     @GeneratedValue
     private Long id;
+    
+    @NotNull
     private Date date;
+    
+    @NotNull
     private String title;
+    
+    @NotNull
     private String description;
-    @JsonIgnore
-    @ManyToMany
-    private Set<User> attendees;
 }

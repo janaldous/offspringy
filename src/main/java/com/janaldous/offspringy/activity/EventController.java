@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.janaldous.offspringy.activity.dto.ActivityDto;
+import com.janaldous.offspringy.activity.dto.EventDto;
 import com.janaldous.offspringy.entity.Activity;
 import com.janaldous.offspringy.entity.Event;
 
@@ -33,29 +36,52 @@ public class EventController {
 	
 	@Autowired
 	private IEventService eventService;
+	
+	@Autowired
+	private ModelMapper modelMapper;
     
 	@GetMapping("/activity/{activityId}/event/{eventId}")
-    ResponseEntity<Event> getEvent(@PathVariable Long eventId) {
+    ResponseEntity<EventDto> getEvent(@PathVariable Long eventId) {
         Optional<Event> event = eventService.getEvent(eventId);
-		return event.map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (event.isPresent()) {
+        	return ResponseEntity.ok().body(convertToEventDto(event.get()));
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 	
 	@PutMapping("/activity/{activityId}/event/{eventId}")
-    ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event, @PathVariable Long activityId) {
+    ResponseEntity<EventDto> updateEvent(@Valid @RequestBody EventDto event, @PathVariable Long activityId) {
 		log.info("Request to update event: {}", event);
 		
-		if (!activityService.findById(activityId).isPresent())
+		if (!activityService.findActivity(activityId).isPresent())
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
-		Event result = eventService.add(event);
+		EventDto result = convertToEventDto(eventService.add(convertToEventEntity(event)));
         return ResponseEntity.ok().body(result);
     }
 	
 	@PutMapping("/activity/{id}/event")
-    ResponseEntity<Activity> addEventToActivity(@Valid @RequestBody Event event, @PathVariable Long id) {
+    ResponseEntity<ActivityDto> addEventToActivity(@Valid @RequestBody EventDto event, @PathVariable Long id) {
         log.info("Request to add event: {}", event);
-        Activity result = activityService.addEvent(id, event);
+        ActivityDto result = convertToActivityDto(activityService.addEvent(id, convertToEventEntity(event)));
         return ResponseEntity.ok().body(result);
     }
+	
+	private EventDto convertToEventDto(Event event) {
+		return modelMapper.map(event, EventDto.class);
+	}
+	
+	private Event convertToEventEntity(EventDto eventDto) {
+		return modelMapper.map(eventDto, Event.class);
+	}
+	
+	private ActivityDto convertToActivityDto(Activity activity) {
+		ActivityDto activityDto = modelMapper.map(activity, ActivityDto.class);
+	    return activityDto;
+	}
+	
+//	private Activity convertToActivityEntity(ActivityDto activityDto) {
+//		Activity activity = modelMapper.map(activityDto, Activity.class);
+//	    return activity;
+//	}
 }
