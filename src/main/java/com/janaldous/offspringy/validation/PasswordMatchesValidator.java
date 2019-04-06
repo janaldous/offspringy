@@ -3,7 +3,7 @@ package com.janaldous.offspringy.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.janaldous.offspringy.user.dto.UserDto;
+import com.janaldous.offspringy.user.controller.UserDto;
 
 public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, Object> {
 

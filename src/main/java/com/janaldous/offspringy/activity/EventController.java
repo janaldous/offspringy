@@ -80,8 +80,4 @@ public class EventController {
 	    return activityDto;
 	}
 	
-//	private Activity convertToActivityEntity(ActivityDto activityDto) {
-//		Activity activity = modelMapper.map(activityDto, Activity.class);
-//	    return activity;
-//	}
 }

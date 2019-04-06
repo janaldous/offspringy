@@ -81,10 +81,7 @@ public class ActivityController {
     		@Valid @RequestBody ActivityDto activity) {
 		log.info("Request to update activity: {}", activity);
 		return activityService.findActivity(id).map(a -> {
-			a.setName(activity.getName());
-			a.setProvider(activity.getProvider());
-			a.setSummary(activity.getSummary());
-			a.setType(activity.getType());
+			modelMapper.map(activity, a);
 			ActivityDto result = convertToDto(activityService.save(convertToEntity(activity)));
 			return ResponseEntity.ok().body(result);
 		})

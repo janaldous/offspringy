@@ -26,14 +26,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.janaldous.offspringy.OffspringyTest;
 import com.janaldous.offspringy.activity.dto.ActivityDto;
 import com.janaldous.offspringy.entity.Activity;
 import com.janaldous.offspringy.entity.ActivityType;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ActivityController.class)
-public class ActivityControllerTest {
+public class ActivityControllerTest extends OffspringyTest {
 
 	@Autowired
 	private MockMvc mvc;
@@ -234,13 +234,5 @@ public class ActivityControllerTest {
 				.content(asJsonString(activityDto))
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
-	}
-	
-	public static String asJsonString(final Object obj) {
-	    try {
-	        return new ObjectMapper().writeValueAsString(obj);
-	    } catch (Exception e) {
-	        throw new RuntimeException(e);
-	    }
 	}
 }

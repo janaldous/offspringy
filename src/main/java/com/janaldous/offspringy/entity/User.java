@@ -17,7 +17,7 @@ import lombok.NonNull;
 public class User {
 
     @Id
-    private String id;
+    private Long id;
     private String firstName;
     private String lastName;
     @NonNull

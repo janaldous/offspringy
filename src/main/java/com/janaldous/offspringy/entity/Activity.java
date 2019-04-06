@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Builder
 @Entity
 public class Activity {
+	
 	@Id
     @GeneratedValue
     private Long id;

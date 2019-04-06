@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 public class Provider {
+	
 	@Id
 	@GeneratedValue
 	private Long id;

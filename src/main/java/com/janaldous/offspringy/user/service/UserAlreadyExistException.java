@@ -1,4 +1,4 @@
-package com.janaldous.offspringy.user;
+package com.janaldous.offspringy.user.service;
 
 public class UserAlreadyExistException extends RuntimeException {
 
