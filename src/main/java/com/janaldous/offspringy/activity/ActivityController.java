@@ -35,82 +35,85 @@ import com.janaldous.offspringy.entity.ActivityType;
 @RequestMapping("/api")
 @Api(value="activity")
 public class ActivityController {
-	
+
 	private final Logger log = LoggerFactory.getLogger(ActivityController.class);
-	
+
 	@Autowired
-    private IActivityService activityService;
-	
+	private IActivityService activityService;
+
 	@Autowired
 	private ModelMapper modelMapper;
-    
+
 	@ApiOperation(value = "View a list of available activities", response = Collection.class)
 	@GetMapping("/activity")
-    Collection<ActivityDto> activities(
-    		@RequestParam(required = false) String name, 
-    		@RequestParam(required = false) ActivityType type
-    		) {
-        return activityService.search(name, type)
+	Collection<ActivityDto> activities(
+			@RequestParam(required = false) String name, 
+			@RequestParam(required = false) ActivityType type
+			) {
+		return activityService.search(name, type)
 				.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
-    }
-	
+	}
+
 	@ApiOperation(value = "View details of an activity", response = ResponseEntity.class)
 	@GetMapping("/activity/{id}")
-    ResponseEntity<?> getActivityDetail(@PathVariable Long id) {
-        Optional<Activity> activity = activityService.findActivity(id);
-        
-        return activity.map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-	
+	ResponseEntity<?> getActivityDetail(@PathVariable Long id) {
+		Optional<Activity> activity = activityService.findActivity(id);
+		Optional<ActivityDto> activityDto = Optional.of(convertToDto(activity.get())); 
+
+		return activityDto.map(response -> ResponseEntity.ok().body(response))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
 	@ApiOperation(value = "Create an activity", response = ResponseEntity.class)
 	@PostMapping("/activity")
-    ResponseEntity<ActivityDto> createActivity(@Valid @RequestBody ActivityDto activity) throws URISyntaxException {
+	ResponseEntity<ActivityDto> createActivity(@Valid @RequestBody ActivityDto activity) throws URISyntaxException {
 		log.info("Request to create activity: {}", activity);
-        ActivityDto result = convertToDto(activityService.save(convertToEntity(activity)));
-        
-        return ResponseEntity.created(new URI("/api/activity/" + result.getId()))
-                .body(result);
-    }
-	
+		ActivityDto result = convertToDto(activityService.create(convertToEntity(activity)));
+
+		return ResponseEntity.created(new URI("/api/activity/" + result.getId()))
+				.body(result);
+	}
+
 	@ApiOperation(value = "Update an activity", response = ResponseEntity.class)
 	@PutMapping("/activity/{id}")
-    ResponseEntity<ActivityDto> updateActivity(@PathVariable Long id,
-    		@Valid @RequestBody ActivityDto activity) {
+	ResponseEntity<ActivityDto> updateActivity(@PathVariable Long id,
+			@Valid @RequestBody ActivityDto activity) throws EventDoesNotExistException {
 		log.info("Request to update activity: {}", activity);
-		return activityService.findActivity(id).map(a -> {
-			modelMapper.map(activity, a);
-			ActivityDto result = convertToDto(activityService.save(convertToEntity(activity)));
+		Optional<Activity> activityOptional = activityService.findActivity(id);
+		
+		// TODO find out the Java 8 way of doing this
+		if(activityOptional.isPresent()) {
+			ActivityDto result = convertToDto(activityService.update(activity));
 			return ResponseEntity.ok().body(result);
-		})
-		.orElseGet(() -> {
+		} else {
 			activity.setId(id);
-			ActivityDto result = convertToDto(activityService.save(convertToEntity(activity)));
+			ActivityDto result = convertToDto(activityService.create(convertToEntity(activity)));
 			return ResponseEntity.ok().body(result);
-		});
-    }
-	
+		}
+	}
+
 	@ApiOperation(value = "Delete an activity", response = ResponseEntity.class)
 	@DeleteMapping("/activity/{id}")
-    public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
+	public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
 		log.info("Request to delete activity: {}", id);
 		if (!activityService.hasActivity(id)) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-        activityService.deleteById(id);
-        
-        return ResponseEntity.ok().build();
-    }
-	
+		activityService.deleteById(id);
+
+		return ResponseEntity.ok().build();
+	}
+
 	private ActivityDto convertToDto(Activity activity) {
 		ActivityDto activityDto = modelMapper.map(activity, ActivityDto.class);
-	    return activityDto;
+		activityDto.setProvider(activity.getProvider() == null ? null : activity.getProvider().getEmail());
+		return activityDto;
 	}
-	
+
 	private Activity convertToEntity(ActivityDto activityDto) {
 		Activity activity = modelMapper.map(activityDto, Activity.class);
-	    return activity;
+		return activity;
 	}
 }

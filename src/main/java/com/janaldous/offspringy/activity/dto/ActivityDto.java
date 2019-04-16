@@ -42,5 +42,5 @@ public class ActivityDto {
 	
 	@Getter
 	@Setter
-	private Provider provider;
+	private String provider;
 }

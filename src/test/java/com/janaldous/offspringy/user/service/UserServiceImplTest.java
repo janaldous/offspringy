@@ -1,7 +1,11 @@
 package com.janaldous.offspringy.user.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -9,21 +13,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.janaldous.offspringy.entity.User;
+import com.janaldous.offspringy.user.controller.UserDto;
 import com.janaldous.offspringy.user.repository.UserRepository;
-
-import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.given;
 
 
 @RunWith(SpringRunner.class)
 public class UserServiceImplTest {
 
+	@Autowired
+	protected ModelMapper modelMapper;
+	
 	@TestConfiguration
     static class TestContextConfiguration {
   
         @Bean
         public IUserService userService() {
             return new UserServiceImpl();
+        }
+        
+        @Bean
+        public ModelMapper modelMapper() {
+            return new ModelMapper();
         }
     }
 	
@@ -38,11 +48,13 @@ public class UserServiceImplTest {
 		String firstName = "John";
 		String lastName = "Appleseed";
 		String email = "john.appleseed@gmail.com";
-		User user = User.builder()
+		UserDto user = UserDto.builder()
 				.firstName(firstName)
 				.lastName(lastName)
 				.email(email)
 				.build();
+		
+		User user1 = modelMapper.map(user, User.class);
 		
 		User userSaved = User.builder()
 				.id(1L)
@@ -52,7 +64,7 @@ public class UserServiceImplTest {
 				.build();
 		
 		given(userRepository.findByEmail(email)).willReturn(null);
-		given(userRepository.save(user)).willReturn(userSaved);
+		given(userRepository.save(user1)).willReturn(userSaved);
 		
 		User userRegistered = userService.registerUser(user);
 		assertEquals(userRegistered.getId(), userSaved.getId());
@@ -72,8 +84,10 @@ public class UserServiceImplTest {
 				.email(email)
 				.build();
 		
+		UserDto userDto = modelMapper.map(user, UserDto.class);
+		
 		given(userRepository.findByEmail(email)).willReturn(user);
 		
-		userService.registerUser(user);
+		userService.registerUser(userDto);
 	}
 }

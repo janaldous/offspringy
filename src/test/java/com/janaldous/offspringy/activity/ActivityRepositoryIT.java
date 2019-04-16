@@ -16,7 +16,7 @@ import com.janaldous.offspringy.entity.ActivityType;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class ActivityRepositoryIntegrationTest {
+public class ActivityRepositoryIT {
 
 	@Autowired
     private TestEntityManager entityManager;

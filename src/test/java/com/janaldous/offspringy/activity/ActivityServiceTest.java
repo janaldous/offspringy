@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,6 +30,11 @@ public class ActivityServiceTest {
         @Bean
         public IActivityService activityService() {
             return new ActivityServiceImpl();
+        }
+        
+        @Bean
+        public ModelMapper modelMapper() {
+        	return new ModelMapper();
         }
     }
 	

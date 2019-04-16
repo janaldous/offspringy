@@ -2,6 +2,7 @@ package com.janaldous.offspringy.activity;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static com.janaldous.offspringy.OffspringyTest.asJsonString;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,22 +20,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.janaldous.offspringy.OffspringyTest;
 import com.janaldous.offspringy.activity.dto.ActivityDto;
+import com.janaldous.offspringy.config.SecurityTestConfig;
 import com.janaldous.offspringy.entity.Activity;
 import com.janaldous.offspringy.entity.ActivityType;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ActivityController.class)
-public class ActivityControllerTest extends OffspringyTest {
+@SpringBootTest(classes = SecurityTestConfig.class)
+@AutoConfigureMockMvc
+public class ActivityControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
@@ -44,15 +47,6 @@ public class ActivityControllerTest extends OffspringyTest {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	@TestConfiguration
-    static class ControllerContextConfiguration {
-  
-        @Bean
-        public ModelMapper modelMapper() {
-            return new ModelMapper();
-        }
-    }
-	
 	@Test
 	public void givenActivities_whenGetActivities_thenReturnJsonArray()
 			throws Exception {
@@ -103,6 +97,7 @@ public class ActivityControllerTest extends OffspringyTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	public void givenNewActivity_whenPostNewActivity_thenReturnJson()
 			throws Exception {
 		// given
@@ -128,7 +123,7 @@ public class ActivityControllerTest extends OffspringyTest {
 				.type(ActivityType.valueOf(type))
 				.build();
 		
-		given(service.save(activityBefore)).willReturn(activitySaved);
+		given(service.create(activityBefore)).willReturn(activitySaved);
 		
 		// when, then
 		mvc.perform(post("/api/activity")
@@ -139,6 +134,7 @@ public class ActivityControllerTest extends OffspringyTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	public void givenInvalidActivity_whenPostNewActivity_thenReturnValidationError()
 			throws Exception {
 		// given
@@ -157,6 +153,7 @@ public class ActivityControllerTest extends OffspringyTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	public void givenActivity_whenDeleteActivity_thenReturn200()
 			throws Exception {
 		// given
@@ -169,6 +166,7 @@ public class ActivityControllerTest extends OffspringyTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	public void givenNonExistentActivity_whenDeleteActivity_thenReturn404()
 			throws Exception {
 		// given
@@ -183,6 +181,7 @@ public class ActivityControllerTest extends OffspringyTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	public void givenActivity_whenUpdateActivity_thenReturn200()
 			throws Exception {
 		// given
@@ -202,7 +201,7 @@ public class ActivityControllerTest extends OffspringyTest {
 		
 		Optional<Activity> act = Optional.of(activitySaved);
 		
-		given(service.save(activitySaved)).willReturn(activitySaved);
+		given(service.update(notNull())).willReturn(activitySaved);
 		given(service.findActivity(1L)).willReturn(act);
 		
 		// when, then
@@ -213,6 +212,7 @@ public class ActivityControllerTest extends OffspringyTest {
 	}
 	
 	@Test
+	@WithMockUser(roles = "ADMIN")
 	public void givenNonExistentActivity_whenUpdateActivity_thenReturn200CreatedNewActivity()
 			throws Exception {
 		// given
@@ -225,7 +225,7 @@ public class ActivityControllerTest extends OffspringyTest {
 		Optional<Activity> activityResult = Optional.empty();
 		
 		given(service.findActivity(101L)).willReturn(activityResult);
-		given(service.save(activity)).willReturn(activity);
+		given(service.create(activity)).willReturn(activity);
 		
 		ActivityDto activityDto = modelMapper.map(activity, ActivityDto.class);
 		

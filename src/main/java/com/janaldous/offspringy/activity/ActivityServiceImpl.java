@@ -1,14 +1,19 @@
 package com.janaldous.offspringy.activity;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import com.janaldous.offspringy.activity.dto.ActivityDto;
 import com.janaldous.offspringy.entity.Activity;
 import com.janaldous.offspringy.entity.ActivityType;
 import com.janaldous.offspringy.entity.Event;
@@ -18,6 +23,9 @@ public class ActivityServiceImpl implements IActivityService {
 	
 	@Autowired
 	private ActivityRepository activityRepository;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Override
 	public void findByName(String name) {
@@ -35,13 +43,8 @@ public class ActivityServiceImpl implements IActivityService {
 	}
 
 	@Override
-	public Activity save(Activity activity) {
-		Activity a = Activity.builder()
-				.id(activity.getId())
-				.name(activity.getName())
-				.build();
-				
-		return activityRepository.save(a);
+	public Activity create(Activity activity) {
+		return activityRepository.save(activity);
 	}
 
 	@Override
@@ -70,10 +73,27 @@ public class ActivityServiceImpl implements IActivityService {
 		return activityRepository.findById(id).isPresent();
 	}
 
+//	@PreAuthorize("#activityUpdate.provider == authentication.principal.username or hasRole('ROLE_ADMIN')")
 	@Override
-	public Activity update(Long id, Activity convertToEntity) {
-		Activity activity = activityRepository.findById(id).get();
+	public Activity update(ActivityDto activityUpdate) throws EventDoesNotExistException {
+		Optional<Activity> activityOptional = activityRepository.findById(activityUpdate.getId());
 		
-		return null;
+		activityOptional.orElseThrow(() -> new EventDoesNotExistException());
+		
+		Activity activity = activityOptional.get();
+		modelMapper.typeMap(Activity.class, Activity.class).setCondition(Conditions.isNotNull());
+		modelMapper.map(activityUpdate, activity);
+		
+		return activityRepository.save(activity);
+	}
+	
+	@Override
+	public Collection<Event> getEvents(Long activityId) throws ActivityDoesNotExistException {
+		Optional<Activity> activity = activityRepository.findById(activityId);
+		if (!activity.isPresent()) {
+			throw new ActivityDoesNotExistException("Activity does not exist");
+		}
+		
+		return activity.get().getEvents();
 	}
 }

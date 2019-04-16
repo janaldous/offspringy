@@ -12,12 +12,10 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.janaldous.offspringy.entity.Activity;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ActivityController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class EventControllerTest {
 
 	@Autowired
@@ -34,15 +33,6 @@ public class EventControllerTest {
 	@MockBean
 	private IActivityService service;
 	
-	@TestConfiguration
-    static class ControllerContextConfiguration {
-  
-        @Bean
-        public ModelMapper modelMapper() {
-            return new ModelMapper();
-        }
-    }
-
 	@Test
 	public void givenActivityQuery_whenGetActivities_thenReturnJsonArray()
 			throws Exception {

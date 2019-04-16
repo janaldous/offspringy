@@ -9,33 +9,56 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.janaldous.offspringy.activity.ActivityRepository;
+import com.janaldous.offspringy.activity.EventRepository;
 import com.janaldous.offspringy.entity.Activity;
 import com.janaldous.offspringy.entity.Event;
 import com.janaldous.offspringy.entity.Group;
+import com.janaldous.offspringy.entity.User;
 import com.janaldous.offspringy.group.GroupRepository;
+import com.janaldous.offspringy.user.repository.UserRepository;
 
 @Component
 class Initializer implements CommandLineRunner {
-
+	@Autowired
     private final GroupRepository repository;
-    @Autowired
+    
+	@Autowired
     private ActivityRepository activityRepository;
-
+	
+	@Autowired
+	private EventRepository eventRepository;
+	
+	@Autowired
+    private UserRepository userRepository;
+	
     public Initializer(GroupRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public void run(String... strings) {
+    	User provider = userRepository.findByEmail("john@provider.com");
+
     	Stream.of("Activity 1", "Activity 12", "Activity 13",
                 "Activity 14").forEach(name ->
-                activityRepository.save(new Activity(name))
+                activityRepository.save(Activity.builder().name(name).provider(provider).build())
         );
-    	Activity activity = activityRepository.findById((long) 1).get();
-    	activity.getEvents().add(Event.builder().title("Event 1").description("Description").build());
-    	activity.getEvents().add(Event.builder().title("Event 2").description("Description").build());
     	
-    	activityRepository.save(activity);
+    	Event e1 = Event.builder().title("Event 1").description("Description").build();
+    	Event e2 = Event.builder().title("Event 2").description("Description").build();
+    	
+    	eventRepository.save(e1);
+    	eventRepository.save(e2);
+    	
+    	Activity activity = activityRepository.findAll().get(0);
+    	activity.setProvider(provider);
+    	activity.addEvent(e1);
+    	activity.addEvent(e2);
+    	
+    	Activity afterSave = activityRepository.save(activity);
+    	assert 2 == afterSave.getEvents().size() : "events not saved correctly";
+    	
+    	activityRepository.findAll().forEach(System.out::println);
     	
     	Stream.of("Denver JUG", "Utah JUG", "Seattle JUG",
                 "Richmond JUG").forEach(name ->

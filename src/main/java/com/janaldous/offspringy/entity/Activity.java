@@ -35,7 +35,7 @@ public class Activity {
 	@NonNull
 	private String name;
 	@ManyToOne
-	private Provider provider;
+	private User provider;
 	private ActivityType type;
 	private String summary;
 	@JsonIgnore

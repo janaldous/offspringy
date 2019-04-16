@@ -6,42 +6,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.janaldous.offspringy.OffspringyTest;
+import com.janaldous.offspringy.config.SecurityTestConfig;
 import com.janaldous.offspringy.entity.User;
 import com.janaldous.offspringy.user.service.IUserService;
 import com.janaldous.offspringy.user.service.UserAlreadyExistException;
 
+
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+@SpringBootTest(classes = SecurityTestConfig.class)
+@AutoConfigureMockMvc
 public class UserControllerTest extends OffspringyTest {
 
 	@Autowired
 	private MockMvc mvc;
-
+	
 	@MockBean
 	private IUserService userService;
-	
-	@Autowired
-	protected ModelMapper modelMapper;
-	
-	@TestConfiguration
-    static class ControllerContextConfiguration {
-  
-        @Bean
-        public ModelMapper modelMapper() {
-            return new ModelMapper();
-        }
-    }
 	
 	@Test
 	public void testGivenValidUserDto_RegisterUser() throws Exception {
@@ -57,16 +46,15 @@ public class UserControllerTest extends OffspringyTest {
 				.matchingPassword(password)
 				.build();
 		
-		User userInput = modelMapper.map(userDto, User.class);
-		
 		User user = User.builder()
 				.id(1L)
 				.firstName(firstName)
 				.lastName(lastName)
 				.email(email)
+				.password(password)
 				.build();
 		
-		given(userService.registerUser(userInput)).willReturn(user);
+		given(userService.registerUser(userDto)).willReturn(user);
 		
 		mvc.perform(post("/api/register")
 				.content(asJsonString(userDto))
@@ -108,9 +96,8 @@ public class UserControllerTest extends OffspringyTest {
 				.matchingPassword("apple")
 				.build();
 		
-		User userInput = modelMapper.map(userDto, User.class);
-		
-		given(userService.registerUser(userInput)).willThrow(new UserAlreadyExistException("There is a user with that email adress: " + userDto.getEmail()));
+		given(userService.registerUser(userDto))
+			.willThrow(new UserAlreadyExistException("There is a user with that email adress: " + userDto.getEmail()));
 		
 		mvc.perform(post("/api/register")
 				.content(asJsonString(userDto))
