@@ -45,8 +45,8 @@ public class EventServiceTest {
     public void givenBookedEvent_whenUpdateEvent_thenThrowError() {
 		// given
 		Set<User> attendees = new HashSet<>();
-		attendees.add(User.builder().firstName("dog").email("dog@gmail.com").build());
-		attendees.add(User.builder().firstName("cat").email("cat@gmail.com").build());
+		attendees.add(User.builder().firstName("dog").email("dog@gmail.com").password("holdmypoodle").build());
+		attendees.add(User.builder().firstName("cat").email("cat@gmail.com").password("holdmypoodle").build());
 		
         Event event = Event.builder()
         		.id(1L)
