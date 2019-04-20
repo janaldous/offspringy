@@ -2,8 +2,8 @@ package com.janaldous.offspringy.activity;
 
 import java.util.Optional;
 
-import com.janaldous.offspringy.activity.dto.EventPatchDto;
-import com.janaldous.offspringy.entity.Event;
+import com.janaldous.offspringy.activity.data.entity.Event;
+import com.janaldous.offspringy.web.dto.EventPatchDto;
 
 public interface IEventService {
 

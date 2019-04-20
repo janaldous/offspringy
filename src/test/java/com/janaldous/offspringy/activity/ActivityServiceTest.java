@@ -17,9 +17,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.janaldous.offspringy.entity.Activity;
-import com.janaldous.offspringy.entity.ActivityType;
-import com.janaldous.offspringy.entity.Event;
+import com.janaldous.offspringy.activity.data.ActivityRepository;
+import com.janaldous.offspringy.activity.data.entity.Activity;
+import com.janaldous.offspringy.activity.data.entity.ActivityType;
+import com.janaldous.offspringy.activity.data.entity.Event;
 
 @RunWith(SpringRunner.class)
 public class ActivityServiceTest {

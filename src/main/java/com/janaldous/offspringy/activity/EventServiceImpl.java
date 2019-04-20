@@ -9,11 +9,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.janaldous.offspringy.activity.dto.EventPatchDto;
-import com.janaldous.offspringy.entity.Event;
+import com.janaldous.offspringy.activity.data.EventRepository;
+import com.janaldous.offspringy.activity.data.entity.Event;
+import com.janaldous.offspringy.user.UpdateBookedEventException;
+import com.janaldous.offspringy.web.dto.EventPatchDto;
 
 @Service
-public class EventServiceImpl implements IEventService {
+class EventServiceImpl implements IEventService {
 
 	@Autowired
 	private EventRepository eventRepository;
@@ -52,5 +54,4 @@ public class EventServiceImpl implements IEventService {
 		modelMapper.map(eventDto, event);
 		return eventRepository.save(event);
 	}
-
 }

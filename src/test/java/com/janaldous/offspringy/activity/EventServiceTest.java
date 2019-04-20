@@ -15,8 +15,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.janaldous.offspringy.entity.Event;
-import com.janaldous.offspringy.entity.User;
+import com.janaldous.offspringy.activity.data.EventRepository;
+import com.janaldous.offspringy.activity.data.entity.Event;
+import com.janaldous.offspringy.user.UpdateBookedEventException;
+import com.janaldous.offspringy.user.data.entity.User;
 
 @RunWith(SpringRunner.class)
 public class EventServiceTest {

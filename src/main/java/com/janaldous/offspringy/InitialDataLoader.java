@@ -12,12 +12,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.janaldous.offspringy.entity.Privilege;
-import com.janaldous.offspringy.entity.Role;
-import com.janaldous.offspringy.entity.User;
-import com.janaldous.offspringy.user.repository.PrivilegeRepository;
-import com.janaldous.offspringy.user.repository.RoleRepository;
-import com.janaldous.offspringy.user.repository.UserRepository;
+import com.janaldous.offspringy.user.data.PrivilegeRepository;
+import com.janaldous.offspringy.user.data.RoleRepository;
+import com.janaldous.offspringy.user.data.UserRepository;
+import com.janaldous.offspringy.user.data.entity.Privilege;
+import com.janaldous.offspringy.user.data.entity.Role;
+import com.janaldous.offspringy.user.data.entity.User;
 
 @Component
 public class InitialDataLoader implements

@@ -11,8 +11,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.janaldous.offspringy.entity.Activity;
-import com.janaldous.offspringy.entity.ActivityType;
+import com.janaldous.offspringy.activity.data.ActivityRepository;
+import com.janaldous.offspringy.activity.data.entity.Activity;
+import com.janaldous.offspringy.activity.data.entity.ActivityType;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

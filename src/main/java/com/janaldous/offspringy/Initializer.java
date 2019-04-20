@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.janaldous.offspringy.activity.ActivityRepository;
-import com.janaldous.offspringy.activity.EventRepository;
-import com.janaldous.offspringy.entity.Activity;
-import com.janaldous.offspringy.entity.Event;
-import com.janaldous.offspringy.entity.Group;
-import com.janaldous.offspringy.entity.User;
+import com.janaldous.offspringy.activity.data.ActivityRepository;
+import com.janaldous.offspringy.activity.data.EventRepository;
+import com.janaldous.offspringy.activity.data.entity.Activity;
+import com.janaldous.offspringy.activity.data.entity.Event;
+import com.janaldous.offspringy.group.Group;
 import com.janaldous.offspringy.group.GroupRepository;
-import com.janaldous.offspringy.user.repository.UserRepository;
+import com.janaldous.offspringy.user.data.UserRepository;
+import com.janaldous.offspringy.user.data.entity.User;
 
 @Component
 class Initializer implements CommandLineRunner {
