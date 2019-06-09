@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.janaldous.offspringy.activity.data.ActivityRepository;
-import com.janaldous.offspringy.activity.data.EventRepository;
-import com.janaldous.offspringy.activity.data.entity.Activity;
-import com.janaldous.offspringy.activity.data.entity.Event;
-import com.janaldous.offspringy.group.Group;
-import com.janaldous.offspringy.group.GroupRepository;
+import com.janaldous.offspringy.business.activity.data.ActivityRepository;
+import com.janaldous.offspringy.business.activity.data.EventRepository;
+import com.janaldous.offspringy.business.activity.data.entity.Activity;
+import com.janaldous.offspringy.business.activity.data.entity.Event;
+import com.janaldous.offspringy.business.group.Group;
+import com.janaldous.offspringy.business.group.GroupRepository;
 import com.janaldous.offspringy.user.data.UserRepository;
 import com.janaldous.offspringy.user.data.entity.User;
 
@@ -44,8 +44,8 @@ class Initializer implements CommandLineRunner {
                 activityRepository.save(Activity.builder().name(name).provider(provider).build())
         );
     	
-    	Event e1 = Event.builder().title("Event 1").description("Description").build();
-    	Event e2 = Event.builder().title("Event 2").description("Description").build();
+    	Event e1 = Event.builder().title("Event 1").description("Description").capacity(2).build();
+    	Event e2 = Event.builder().title("Event 2").description("Description").capacity(2).build();
     	
     	eventRepository.save(e1);
     	eventRepository.save(e2);

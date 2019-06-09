@@ -4,14 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.janaldous.offspringy.activity.data.entity.Activity;
+import com.janaldous.offspringy.business.activity.data.entity.Activity;
 import com.janaldous.offspringy.web.dto.ActivityDto;
 
 @Component
 class ActivityModelMapper {
 	
 	@Autowired
-	private static ModelMapper modelMapper;
+	private static ModelMapper modelMapper = new ModelMapper();
 	
 	static ActivityDto convertToDto(Activity activity) {
 		ActivityDto activityDto = modelMapper.map(activity, ActivityDto.class);

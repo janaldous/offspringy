@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.janaldous.offspringy.activity.ActivityNotFound;
+import com.janaldous.offspringy.business.activity.ActivityNotFound;
+import com.janaldous.offspringy.business.activity.EventNotFoundException;
 import com.janaldous.offspringy.web.dto.ActivityDto;
 import com.janaldous.offspringy.web.dto.EventDto;
 import com.janaldous.offspringy.web.dto.EventPatchDto;
@@ -51,7 +52,7 @@ public class EventController {
 		}
 		
 		try {
-			Collection<EventDto> events = activityService.getEvents(activityId);
+			Collection<EventDto> events = eventService.getAll(activityId);
 			return ResponseEntity.ok().body(events);
 		} catch (ActivityNotFound e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -59,41 +60,41 @@ public class EventController {
     }
 	
 	@GetMapping("/activity/{activityId}/event/{eventId}")
-    ResponseEntity<EventDto> getEvent(@PathVariable Long eventId) {
-        Optional<EventDto> eventDto = eventService.getEvent(eventId);
+    ResponseEntity<EventDto> getEvent(@PathVariable Long eventId) throws EventNotFoundException {
+        Optional<EventDto> eventDto = eventService.get(eventId);
 
         return eventDto.map(response -> ResponseEntity.ok().body(response))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 	
 	@PutMapping("/activity/{activityId}/event/{eventId}")
-    ResponseEntity<EventDto> putEvent(@Valid @RequestBody EventDto event, @PathVariable Long activityId) {
+    ResponseEntity<ActivityDto> putEvent(@Valid @RequestBody EventDto event, @PathVariable Long activityId) throws EventNotFoundException {
 		log.info("Request to update event: {}", event);
 
 		if (!activityService.findActivity(activityId).isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		EventDto result = eventService.addEvent(event);
+		ActivityDto result = eventService.addEvent(activityId, event);
         return ResponseEntity.ok().body(result);
     }
 	
 	@PutMapping("/activity/{activityId}/event")
-    ResponseEntity<ActivityDto> addEventToActivity(@Valid @RequestBody EventDto event, @PathVariable Long activityId) {
+    ResponseEntity<ActivityDto> addEventToActivity(@Valid @RequestBody EventDto event, @PathVariable Long activityId) throws EventNotFoundException {
         log.info("Request to add event: {}", event);
         
-        ActivityDto result = activityService.addEvent(activityId, event);
+        ActivityDto result = eventService.addEvent(activityId, event);
         return ResponseEntity.ok().body(result);
     }
 	
 	@PatchMapping("/activity/{activityId}/event/{eventId}")
     ResponseEntity<EventDto> patchEvent(@Valid @RequestBody EventPatchDto event, 
     		@PathVariable Long activityId,
-    		@PathVariable Long eventId) {
+    		@PathVariable Long eventId) throws EventNotFoundException {
 		log.info("Request to update event: {}", event);
 		
 		if (!activityService.findActivity(activityId).isPresent() 
-				|| !eventService.getEvent(eventId).isPresent()) {
+				|| !eventService.get(eventId).isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		

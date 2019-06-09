@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.janaldous.offspringy.activity.EventNotFound;
-import com.janaldous.offspringy.activity.data.entity.ActivityType;
+import com.janaldous.offspringy.business.activity.EventNotFoundException;
+import com.janaldous.offspringy.business.activity.data.entity.ActivityType;
 import com.janaldous.offspringy.web.dto.ActivityDto;
 import com.janaldous.offspringy.web.serviceadapters.ActivityServiceAdapter;
 
@@ -65,7 +66,8 @@ public class ActivityController {
 	@PostMapping("/activity")
 	public ResponseEntity<ActivityDto> createActivity(@Valid @RequestBody ActivityDto activity) throws URISyntaxException {
 		log.info("Request to create activity: {}", activity);
-		ActivityDto result = activityService.create(activity);
+		String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+		ActivityDto result = activityService.create(userEmail, activity, null);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(result);
@@ -74,7 +76,7 @@ public class ActivityController {
 	@ApiOperation(value = "Update an activity", response = ResponseEntity.class)
 	@PutMapping("/activity/{id}")
 	public ResponseEntity<ActivityDto> putActivity(@PathVariable Long id,
-			@Valid @RequestBody ActivityDto activity) throws EventNotFound {
+			@Valid @RequestBody ActivityDto activity) throws EventNotFoundException {
 		log.info("Request to update activity: {}", activity);
 		Optional<ActivityDto> activityOptional = activityService.findActivity(id);
 		
@@ -83,8 +85,9 @@ public class ActivityController {
 			return ResponseEntity.ok()
 					.body(result);
 		} else {
-			activity.setId(id);
-			ActivityDto result = activityService.create(activity);
+			String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+			ActivityDto result = activityService.create(userEmail, activity, id);
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(result);
 		}

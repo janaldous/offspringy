@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.janaldous.offspringy.web.dto.ActivityDto;
 import com.janaldous.offspringy.web.dto.EventDto;
 import com.janaldous.offspringy.web.serviceadapters.ActivityServiceAdapter;
+import com.janaldous.offspringy.web.serviceadapters.EventServiceAdapter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,6 +36,9 @@ public class EventControllerTest {
 
 	@MockBean
 	private ActivityServiceAdapter service;
+	
+	@MockBean
+	private EventServiceAdapter eventService;
 	
 	@Test
 	public void givenNonExistentActivity_whenGetEvents_thenReturn404()
@@ -57,7 +61,6 @@ public class EventControllerTest {
 				.build();
 		
 		EventDto event1 = EventDto.builder()
-				.id(1L)
 				.date(LocalDate.of(2015, 02, 20))
 				.title("summer class")
 				.description("summer classes desc")
@@ -70,7 +73,7 @@ public class EventControllerTest {
 		Collection<EventDto> events = Arrays.asList(event1);
 		
 		given(service.findActivity(activityId)).willReturn(activityOptional);
-		given(service.getEvents(activityId)).willReturn(events);
+		given(eventService.getAll(activityId)).willReturn(events);
 		
 		mvc.perform(get("/api/activity/1/event")
 				.contentType(MediaType.APPLICATION_JSON))

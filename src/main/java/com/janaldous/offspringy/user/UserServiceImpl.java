@@ -1,6 +1,7 @@
 package com.janaldous.offspringy.user;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,5 +47,10 @@ class UserServiceImpl implements IUserService {
 	
 	private boolean emailExists(String email) {
 		return userRepository.findByEmail(email) != null;
+	}
+
+	@Override
+	public Optional<User> getUserByEmail(String email) {
+		return Optional.of(userRepository.findByEmail(email));
 	}
 }

@@ -12,6 +12,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.janaldous.offspringy.business.customer.data.CustomerEntity;
+import com.janaldous.offspringy.business.customer.data.ICustomerRepository;
 import com.janaldous.offspringy.user.data.PrivilegeRepository;
 import com.janaldous.offspringy.user.data.RoleRepository;
 import com.janaldous.offspringy.user.data.UserRepository;
@@ -20,8 +22,7 @@ import com.janaldous.offspringy.user.data.entity.Role;
 import com.janaldous.offspringy.user.data.entity.User;
 
 @Component
-public class InitialDataLoader implements
-  ApplicationListener<ContextRefreshedEvent> {
+public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
  
     boolean alreadySetup = false;
  
@@ -36,6 +37,9 @@ public class InitialDataLoader implements
   
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private ICustomerRepository customerRepository;
   
     @Override
     @Transactional
@@ -52,6 +56,7 @@ public class InitialDataLoader implements
         createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
  
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
+        Role userRole = roleRepository.findByName("ROLE_USER");
         User user = new User();
         user.setFirstName("Test");
         user.setLastName("Test");
@@ -70,8 +75,22 @@ public class InitialDataLoader implements
         provider.setEnabled(true);
         userRepository.save(provider);
         
+        User normalUser = new User();
+        normalUser.setFirstName("John");
+        normalUser.setLastName("Doe");
+        normalUser.setPassword(passwordEncoder.encode("doe"));
+        normalUser.setEmail("john@doe.com");
+        normalUser.setRoles(Arrays.asList(userRole));
+        normalUser.setEnabled(true);
+        userRepository.save(normalUser);
+        
         userRepository.findAll().forEach(System.out::println);
- 
+        
+        CustomerEntity customer = new CustomerEntity();
+        customer.setUser(normalUser);
+        customer.setName(normalUser.getFirstName());
+        customerRepository.save(customer);
+        
         alreadySetup = true;
     }
  

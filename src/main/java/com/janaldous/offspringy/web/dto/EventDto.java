@@ -2,8 +2,6 @@ package com.janaldous.offspringy.web.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -17,10 +15,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EventDto {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-    
     @NotNull
     private LocalDate date;
     
@@ -29,4 +23,6 @@ public class EventDto {
     
     @NotNull
     private String description;
+    
+    private int capacity;
 }

@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.janaldous.offspringy.group.Group;
-import com.janaldous.offspringy.group.GroupRepository;
+import com.janaldous.offspringy.business.group.Group;
+import com.janaldous.offspringy.business.group.GroupRepository;
 
 @RestController
 @RequestMapping("/api")

@@ -28,7 +28,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.janaldous.offspringy.activity.data.entity.ActivityType;
+import com.janaldous.offspringy.business.activity.data.entity.ActivityType;
 import com.janaldous.offspringy.test.config.SecurityTestConfig;
 import com.janaldous.offspringy.web.dto.ActivityDto;
 import com.janaldous.offspringy.web.serviceadapters.ActivityServiceAdapter;
@@ -110,19 +110,17 @@ public class ActivityControllerTest extends OffspringyAbstractTest {
 				.build();
 		
 		ActivityDto activitySaved = ActivityDto.builder()
-				.id(1L)
 				.name(name)
 				.summary(summary)
 				.type(ActivityType.valueOf(type))
 				.build();
 		
-		given(service.create(notNull())).willReturn(activitySaved);
+		given(service.create("admin@company.com", activitySaved, 1L)).willReturn(activitySaved);
 		
 		mvc.perform(post("/api/activity")
 				.content(asJsonString(newActivity))
 				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id", is(activitySaved.getId().intValue())));
+				.andExpect(status().isCreated());
 	}
 	
 	@Test
@@ -150,7 +148,6 @@ public class ActivityControllerTest extends OffspringyAbstractTest {
 			throws Exception {
 		
 		ActivityDto activitySaved = ActivityDto.builder()
-				.id(1L)
 				.name("name")
 				.summary("summary")
 				.type(ActivityType.BOOK_NOW)
@@ -158,7 +155,7 @@ public class ActivityControllerTest extends OffspringyAbstractTest {
 		
 		Optional<ActivityDto> activityOptional = Optional.of(activitySaved);
 		
-		given(service.findActivity(activitySaved.getId())).willReturn(activityOptional);
+		given(service.findActivity(1L)).willReturn(activityOptional);
 		
 		mvc.perform(delete("/api/activity/1")
 				.contentType(MediaType.APPLICATION_JSON))
@@ -183,14 +180,12 @@ public class ActivityControllerTest extends OffspringyAbstractTest {
 	public void givenUpdatedActivity_whenPutActivity_thenReturn200()
 			throws Exception {
 		ActivityDto activityUpdated = ActivityDto.builder()
-				.id(1L)
 				.name("name new")
 				.summary("summary new")
 				.type(ActivityType.FREE)
 				.build();
 		
 		ActivityDto activityOrig = ActivityDto.builder()
-				.id(1L)
 				.name("name")
 				.summary("summary")
 				.type(ActivityType.BOOK_NOW)
@@ -217,7 +212,6 @@ public class ActivityControllerTest extends OffspringyAbstractTest {
 				.summary("acting 1")
 				.build();
 		ActivityDto activitySaved = ActivityDto.builder()
-				.id(2L)
 				.name("acting class")
 				.type(ActivityType.BOOK_NOW)
 				.summary("acting 1")
@@ -225,7 +219,7 @@ public class ActivityControllerTest extends OffspringyAbstractTest {
 		Optional<ActivityDto> activityEmpty = Optional.empty();
 		
 		given(service.findActivity(1L)).willReturn(activityEmpty);
-		given(service.create(newActivity)).willReturn(activitySaved);
+		given(service.create("admin@company.com", newActivity, null)).willReturn(activitySaved);
 		
 		mvc.perform(put("/api/activity/1")
 				.content(asJsonString(newActivity))

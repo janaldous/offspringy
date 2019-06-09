@@ -15,19 +15,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+	
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.janaldous.jugtours.activity"))
+                .apis(RequestHandlerSelectors.basePackage("com.janaldous.offspringy.web"))
                 .paths(regex("/api.*"))
                 .build()
                 .apiInfo(metaData());
     }
+    
     private ApiInfo metaData() {
         ApiInfo apiInfo = new ApiInfo(
                 "myKidsy REST API",
-                "API for activities search and myKidsy operations",
+                "API for activities search and offspringy operations",
                 "1.0",
                 "Terms of service",
                 new Contact("Jat Torres", "https://springframework.guru/about/", "jat.torres@gmail.com"),
